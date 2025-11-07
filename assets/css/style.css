@@ -341,6 +341,65 @@ body {
 }
 .btn-secondary:hover { background-color: #475569; }
 
+/* ========== SEÇÃO DE ESTATÍSTICAS NO SIDEBAR ========== */
+.profile-stats-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.profile-stats-card {
+  background-color: var(--bg-dark);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.profile-stats-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.profile-name-sidebar {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.profile-status-sidebar {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.25rem 0.75rem;
+  display: inline-block;
+}
+
+.profile-stats-grid-sidebar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.stat-item-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-item-sidebar strong {
+  font-size: 1.2rem;
+  color: var(--text-light);
+}
+
+.stat-item-sidebar span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 /* ========== BARRA DE AÇÕES INFERIOR ========== */
 .action-bar {
   display: flex;
