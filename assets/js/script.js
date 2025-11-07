@@ -1,6 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log("✅ WorkSwipe iniciado com swipe ativo");
 
+  // ======== TEMA (dark/light) ========
+  const root = document.documentElement;
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  root.setAttribute('data-theme', savedTheme);
+  if (themeToggleBtn) {
+    updateThemeToggleIcon(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', current);
+      localStorage.setItem('theme', current);
+      updateThemeToggleIcon(current);
+    });
+  }
+
+  function updateThemeToggleIcon(theme) {
+    if (!themeToggleBtn) return;
+    themeToggleBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+    themeToggleBtn.title = theme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro';
+  }
+
   // ========== DADOS DE EXEMPLO ==========
   const profiles = [
     { name: "Ana Silva", title: "Frontend Pleno", location: "São Paulo", bio: "Apaixonada por UI e acessibilidade.", skills: ["React", "Next.js", "UI/UX"], image: "https://i.pravatar.cc/500?img=5" },
@@ -29,12 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ========= ELEMENTOS =========
   const card = document.querySelector('.swipe-card');
+  
+  // Verifica se o card existe antes de continuar
+  if (!card) {
+    console.error('Elemento .swipe-card não encontrado!');
+    return;
+  }
+  
   const img = card.querySelector('.card-image');
   const nameEl = card.querySelector('.card-name');
   const titleEl = card.querySelector('.card-title');
   const locEl = card.querySelector('.card-location');
   const bioEl = card.querySelector('.card-bio');
   const skillsEl = card.querySelector('.card-skills');
+  const btnLike = document.getElementById('card-like');
+  const btnReject = document.getElementById('card-reject');
+  const btnInfo = document.getElementById('card-info');
+  const btnSuper = document.getElementById('card-super');
   const endMsg = document.querySelector('.no-more-profiles');
 
   // ========= FUNÇÕES =========
@@ -64,10 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 400);
   }
 
-  // ========= BOTÕES =========
-  document.querySelector('.btn-like').addEventListener('click', () => animateSwipe("right"));
-  document.querySelector('.btn-reject').addEventListener('click', () => animateSwipe("left"));
-  document.querySelector('.btn-bio').addEventListener('click', () => alert(bioEl.textContent));
+  // (removido) Botões da barra inferior foram retirados do layout.
 
   // ========= SWIPE GESTURE =========
   let startX = 0;
@@ -138,6 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
   card.addEventListener("touchmove", handleGestureMove);
   card.addEventListener("touchend", handleGestureEnd);
 
+  // Eventos dos botões do card
+  if (btnLike) btnLike.addEventListener('click', (e) => { e.preventDefault(); animateSwipe('right'); });
+  if (btnReject) btnReject.addEventListener('click', (e) => { e.preventDefault(); animateSwipe('left'); });
+  if (btnInfo) btnInfo.addEventListener('click', (e) => { e.preventDefault(); alert('Mais informações do perfil em breve.'); });
+  if (btnSuper) btnSuper.addEventListener('click', (e) => { e.preventDefault(); alert('Super Like em breve.'); });
+
   // ========= PERFIL LOCAL =========
   const user = JSON.parse(localStorage.getItem('userProfile')) || {
     name: "Lucas Lucena",
@@ -148,83 +183,168 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function updateUserProfile() {
-    document.getElementById('user-name').textContent = user.name;
-    document.getElementById('user-status').textContent = user.status;
+    const userNameEl = document.getElementById('user-name');
+    const userStatusEl = document.getElementById('user-status');
+    if (userNameEl) userNameEl.textContent = user.name;
+    if (userStatusEl) userStatusEl.textContent = user.status;
     localStorage.setItem('userProfile', JSON.stringify(user));
   }
 
-  document.getElementById('edit-profile-form').onsubmit = e => {
-    e.preventDefault();
-    user.name = document.getElementById('edit-name').value;
-    user.status = document.getElementById('edit-status').value;
-    user.title = document.getElementById('edit-title').value;
-    user.company = document.getElementById('edit-company').value;
-    user.bio = document.getElementById('edit-bio').value;
-    updateUserProfile();
-    document.getElementById('edit-modal-overlay').classList.remove('open');
-  };
+  const editProfileForm = document.getElementById('edit-profile-form');
+  if (editProfileForm) {
+    editProfileForm.onsubmit = e => {
+      e.preventDefault();
+      const editNameEl = document.getElementById('edit-name');
+      const editStatusEl = document.getElementById('edit-status');
+      const editTitleEl = document.getElementById('edit-title');
+      const editCompanyEl = document.getElementById('edit-company');
+      const editBioEl = document.getElementById('edit-bio');
+      
+      if (editNameEl) user.name = editNameEl.value;
+      if (editStatusEl) user.status = editStatusEl.value;
+      if (editTitleEl) user.title = editTitleEl.value;
+      if (editCompanyEl) user.company = editCompanyEl.value;
+      if (editBioEl) user.bio = editBioEl.value;
+      
+      updateUserProfile();
+      const editModalOverlay = document.getElementById('edit-modal-overlay');
+      if (editModalOverlay) editModalOverlay.classList.remove('open');
+    };
+  }
 
   // ========= MODAL =========
   const modal = document.getElementById('edit-modal-overlay');
-  document.getElementById('open-edit-modal-btn').onclick = () => modal.classList.add('open');
-  document.getElementById('modal-close-btn').onclick = () => modal.classList.remove('open');
-  document.getElementById('modal-cancel-btn').onclick = () => modal.classList.remove('open');
+  const openEditBtn = document.getElementById('open-edit-modal-btn');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const modalCancelBtn = document.getElementById('modal-cancel-btn');
+  
+  if (openEditBtn && modal) {
+    openEditBtn.onclick = () => modal.classList.add('open');
+  }
+  if (modalCloseBtn && modal) {
+    modalCloseBtn.onclick = () => modal.classList.remove('open');
+  }
+  if (modalCancelBtn && modal) {
+    modalCancelBtn.onclick = () => modal.classList.remove('open');
+  }
 
   // ======== CURTIDAS MODAL ========
-  const likesModal = document.getElementById("likes-modal-overlay");
-  const likesBtn = document.getElementById("open-likes-modal-btn");
-  const likesClose = document.getElementById("likes-close-btn");
-  const likesList = document.getElementById("likes-list");
+  setTimeout(() => {
+    const likesModal = document.getElementById("likes-modal-overlay");
+    const likesBtn = document.getElementById("open-likes-modal-btn");
+    const likesClose = document.getElementById("likes-close-btn");
+    const likesList = document.getElementById("likes-list");
 
-  // Simulação de curtidas recebidas
-  const likedBy = [
-    { name: "Fernanda Souza", role: "UX Designer", image: "https://i.pravatar.cc/100?img=48" },
-    { name: "João Lima", role: "Recrutador Tech", image: "https://i.pravatar.cc/100?img=12" },
-    { name: "Mariana Costa", role: "CEO - StartHub", image: "https://i.pravatar.cc/100?img=36" }
-  ];
+    console.log('Elementos Curtidas:', { likesModal, likesBtn, likesClose, likesList });
 
-  if (likesBtn) likesBtn.onclick = () => {
-    if (likesList) {
-      likesList.innerHTML = likedBy.map(p => `
-        <div class="like-item">
-          <img src="${p.image}" alt="${p.name}">
-          <div class="like-info">
-            <h4>${p.name}</h4>
-            <p>${p.role}</p>
-          </div>
-        </div>
-      `).join('');
+    // Simulação de curtidas recebidas
+    const likedBy = [
+      { name: "Fernanda Souza", role: "UX Designer", image: "https://i.pravatar.cc/100?img=48" },
+      { name: "João Lima", role: "Recrutador Tech", image: "https://i.pravatar.cc/100?img=12" },
+      { name: "Mariana Costa", role: "CEO - StartHub", image: "https://i.pravatar.cc/100?img=36" }
+    ];
+
+    if (likesBtn) {
+      likesBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Botão Curtidas clicado!');
+        if (likesList) {
+          likesList.innerHTML = likedBy.map(p => `
+            <div class="like-item">
+              <img src="${p.image}" alt="${p.name}">
+              <div class="like-info">
+                <h4>${p.name}</h4>
+                <p>${p.role}</p>
+              </div>
+            </div>
+          `).join('');
+        }
+        if (likesModal) {
+          likesModal.classList.add("open");
+          console.log('Modal de curtidas aberto');
+        }
+      });
+      console.log('Event listener de curtidas adicionado');
+    } else {
+      console.error('Botão de curtidas não encontrado!');
     }
-    if (likesModal) likesModal.classList.add("open");
-  };
-  if (likesClose) likesClose.onclick = () => likesModal.classList.remove("open");
+    
+    if (likesClose) {
+      likesClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (likesModal) likesModal.classList.remove("open");
+      });
+    }
 
-  // Premium modal
-  const premiumModal = document.getElementById('premium-modal-overlay');
-  const premiumOpenBtn = document.getElementById('open-premium-modal-btn');
-  const premiumCloseBtn = document.getElementById('premium-close-btn');
-  if (premiumOpenBtn && premiumModal) premiumOpenBtn.onclick = () => premiumModal.classList.add('open');
-  if (premiumCloseBtn && premiumModal) premiumCloseBtn.onclick = () => premiumModal.classList.remove('open');
+    // Premium modal
+    const premiumModal = document.getElementById('premium-modal-overlay');
+    const premiumOpenBtn = document.getElementById('open-premium-modal-btn');
+    const premiumCloseBtn = document.getElementById('premium-close-btn');
+    
+    console.log('Elementos Premium:', { premiumModal, premiumOpenBtn, premiumCloseBtn });
+    
+    if (premiumOpenBtn && premiumModal) {
+      premiumOpenBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Botão Premium clicado!');
+        premiumModal.classList.add('open');
+        console.log('Modal premium aberto');
+      });
+      console.log('Event listener de premium adicionado');
+    } else {
+      console.error('Botão ou modal premium não encontrado!');
+    }
+    
+    if (premiumCloseBtn && premiumModal) {
+      premiumCloseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        premiumModal.classList.remove('open');
+      });
+    }
+  }, 500); // Aguarda 500ms para garantir que o DOM está pronto
 
   // ========= FOTO PERFIL =========
-  const upload = document.getElementById('profile-pic-upload');
-  const photo = document.getElementById('profile-pic-large');
+  function setupProfilePicUpload() {
+    const upload = document.getElementById('profile-pic-upload');
+    const photo = document.getElementById('profile-pic-large');
+    if (!upload || !photo) return false;
 
-  upload.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const imgData = ev.target.result;
-        photo.style.backgroundImage = `url(${imgData})`;
-        localStorage.setItem('profilePic', imgData);
-      };
-      reader.readAsDataURL(file);
+    if (!upload.dataset.bound) {
+      upload.addEventListener('change', e => {
+        const file = e.target && e.target.files && e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = ev => {
+            const imgData = ev.target && ev.target.result;
+            if (photo) {
+              photo.style.backgroundImage = `url(${imgData})`;
+            }
+            localStorage.setItem('profilePic', imgData || '');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      upload.dataset.bound = 'true';
     }
-  });
 
-  const savedPic = localStorage.getItem('profilePic');
-  if (savedPic) photo.style.backgroundImage = `url(${savedPic})`;
+    const savedPic = localStorage.getItem('profilePic');
+    if (savedPic && photo) {
+      photo.style.backgroundImage = `url(${savedPic})`;
+    }
+    return true;
+  }
+
+  // Tenta registrar imediatamente; se ainda não existir (ex.: após login), observa o DOM e registra depois
+  if (!setupProfilePicUpload()) {
+    const observer = new MutationObserver(() => {
+      if (setupProfilePicUpload()) {
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 
   // ========= INICIALIZA =========
   // Atualiza contador de likes no perfil
