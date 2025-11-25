@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sabiá - Profissional</title>
 
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">Sabiá</div>
     <div class="nav-links">
@@ -29,10 +30,8 @@
   </nav>
 
   <main class="container">
-    <!-- Painel Esquerdo - Login/Cadastro -->
     <aside class="panel panel-left panel-auth">
       <div class="auth-container">
-        <!-- Logo/Avatar -->
         <div class="auth-avatar">
           <div class="avatar-circle">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,10 +41,8 @@
           </div>
         </div>
 
-        <!-- Título -->
         <h2 class="auth-title">Entre ou<br><span class="auth-title-highlight">Cadastre-se</span></h2>
 
-        <!-- Formulário de Login -->
         <form id="auth-form" class="auth-form">
           <div class="form-group-auth">
             <input 
@@ -86,11 +83,9 @@
       </div>
     </aside>
 
-    <!-- Feed Central -->
     <section class="main-feed">
       <div class="swipe-card">
         <img class="card-image" src="" alt="Foto de perfil">
-        <!-- Botões de ação do card -->
         <div class="card-actions">
           <button class="card-action btn-reject" id="card-reject" title="Recusar" aria-label="Recusar">✖️</button>
           <button class="card-action btn-info" id="card-info" title="Mais informações" aria-label="Mais informações">ℹ️</button>
@@ -109,7 +104,6 @@
       <p class="no-more-profiles hidden">Você viu todos os perfis!</p>
     </section>
 
-    <!-- Painel Direito -->
     <aside class="panel panel-right">
       <h3 class="panel-title">Filtros</h3>
       <form id="filter-form">
@@ -139,13 +133,9 @@
           <button type="reset" class="btn btn-secondary">Limpar</button>
         </div>
       </form>
-
-      <!-- Seção de Estatísticas do Perfil removida -->
     </aside>
   </main>
-
   
-  <!-- 🔽 CURTIDAS MODAL -->
   <div id="likes-modal-overlay" class="modal-overlay">
     <div class="modal-content small-modal">
       <div class="modal-header">
@@ -156,7 +146,6 @@
     </div>
   </div>
 
-  <!-- 🔽 PREMIUM MODAL -->
   <div id="premium-modal-overlay" class="modal-overlay">
     <div class="modal-content small-modal">
       <div class="modal-header">
@@ -164,33 +153,36 @@
         <button class="modal-close-btn" id="premium-close-btn">&times;</button>
       </div>
       <div class="plans-container">
+        
         <div class="plan-card">
           <h3>Básico</h3>
           <p>💬 10 curtidas por dia</p>
           <p>📄 Perfil visível a todos</p>
           <h4>R$19,90/mês</h4>
-          <button class="btn btn-primary">Assinar</button>
+          <div id="wallet_container_basico"></div>
         </div>
+
         <div class="plan-card premium">
           <h3>Profissional</h3>
           <p>💚 Curtidas ilimitadas</p>
           <p>🚀 Destaque no feed</p>
           <p>💬 Suporte exclusivo</p>
           <h4>R$39,90/mês</h4>
-          <button class="btn btn-primary">Assinar</button>
+          <div id="wallet_container_pro"></div>
         </div>
+
         <div class="plan-card">
           <h3>Empresarial</h3>
           <p>🏢 Contratações ilimitadas</p>
           <p>🧠 IA para recomendação</p>
           <h4>R$79,90/mês</h4>
-          <button class="btn btn-primary">Assinar</button>
+          <div id="wallet_container_empresa"></div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <!-- Modal de Edição -->
   <div id="edit-modal-overlay" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -216,5 +208,44 @@
 
   <script type="module" src="assets/js/auth.js"></script>
   <script src="assets/js/script.js"></script>
+
+  <script>
+    // Public Key informada
+    const mp = new MercadoPago('APP_USR-cebad7e5-4a35-4f73-bee8-e799cf6c6d06', {
+      locale: 'pt-BR'
+    });
+
+    // Função para gerar os botões
+    async function criarBotaoPagamento(containerId) {
+      try {
+        const response = await fetch('/api/pagamento/criar');
+        const preferenceId = await response.text();
+
+        if (response.ok && preferenceId !== "erro") {
+          mp.bricks().create("wallet", containerId, {
+            initialization: {
+              preferenceId: preferenceId,
+            },
+            customization: {
+              texts: {
+                action: 'pay',
+                valueProp: 'security_details',
+              },
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar botão MP:", error);
+      }
+    }
+
+    // Carrega os botões assim que a página abre
+    window.addEventListener('load', () => {
+        criarBotaoPagamento("wallet_container_basico");
+        criarBotaoPagamento("wallet_container_pro");
+        criarBotaoPagamento("wallet_container_empresa");
+    });
+  </script>
+
 </body>
 </html>
