@@ -46,6 +46,20 @@ const PREMIUM_PLANS = {
             'Suporte prioritário'
         ]
     }
+    ,
+    enterprise: {
+        id: 'premium_enterprise',
+        title: 'Empresarial',
+        price: 79.90,
+        currency: 'BRL',
+        description: 'Plano empresarial com contratações ilimitadas',
+        features: [
+            'Contratações ilimitadas',
+            'IA para recomendação',
+            'Integração com ATS',
+            'Suporte dedicado'
+        ]
+    }
 };
 
 // Classe para gerenciar pagamentos via MercadoPago
@@ -171,12 +185,20 @@ class MercadoPagoPayments {
 
     // Ativar premium localmente (para simulação)
     activatePremium(planId) {
-        const plan = PREMIUM_PLANS[planId];
+        let plan = PREMIUM_PLANS[planId];
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        
+
+        if (!plan) {
+            console.warn('Plano não encontrado:', planId, '— usando fallback "monthly"');
+            plan = PREMIUM_PLANS.monthly;
+            // normalize the planId so stored data references a valid key
+            planId = 'monthly';
+        }
+
         // Calcular data de expiração
         const expirationDate = new Date();
-        if (planId === 'monthly') {
+        // enterprise is a monthly-type plan in the UI, treat as monthly
+        if (planId === 'monthly' || planId === 'enterprise') {
             expirationDate.setMonth(expirationDate.getMonth() + 1);
         } else if (planId === 'yearly') {
             expirationDate.setFullYear(expirationDate.getFullYear() + 1);
@@ -187,7 +209,7 @@ class MercadoPagoPayments {
             isPremium: true,
             premiumPlan: planId,
             premiumExpiration: expirationDate.toISOString(),
-            premiumFeatures: plan.features
+            premiumFeatures: plan.features || []
         };
 
         // Salvar no localStorage (múltiplos formatos para compatibilidade)

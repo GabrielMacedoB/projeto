@@ -303,6 +303,73 @@ document.addEventListener('DOMContentLoaded', () => {
         premiumModal.classList.remove('open');
       });
     }
+
+    // ======= Premium plan buttons (Assinar) =======
+    try {
+      const planButtons = Array.from(document.querySelectorAll('#premium-modal-overlay .plans-container .plan-card .btn-primary'));
+      if (planButtons && planButtons.length) {
+        planButtons.forEach((btn, idx) => {
+          // prefer explicit data-plan attribute; fallback to index mapping
+          const planKey = btn.dataset.plan || (idx === 0 ? 'monthly' : idx === 1 ? 'yearly' : 'monthly');
+          btn.addEventListener('click', async (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            console.log('Assinar clicado para plano:', planKey);
+
+            // Try to use MercadoPagoUtils if available, otherwise simulate activation
+            if (window.MercadoPagoUtils && typeof window.MercadoPagoUtils.activatePremium === 'function') {
+              try {
+                // For a real integration you might call processPayment(planKey)
+                // Here we call activatePremium to simulate a successful subscription flow
+                window.MercadoPagoUtils.activatePremium(planKey);
+
+                // Update UI to reflect premium status
+                const userPremiumEl = document.getElementById('user-premium');
+                if (userPremiumEl) {
+                  userPremiumEl.textContent = 'Sim';
+                  userPremiumEl.classList.remove('premium-false');
+                  userPremiumEl.classList.add('premium-true');
+                }
+
+                if (premiumModal) premiumModal.classList.remove('open');
+                alert('Assinatura ativada (simulada). Obrigado!');
+              } catch (err) {
+                console.error('Erro ao ativar premium:', err);
+                alert('Erro ao processar assinatura. Veja o console para mais detalhes.');
+              }
+            } else {
+              console.warn('MercadoPagoUtils não disponível — simulando ativação local');
+              // fallback: simulate activation locally
+              try {
+                // mark local premium flags
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                currentUser.isPremium = true;
+                currentUser.premiumPlan = planKey;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('premiumStatus', JSON.stringify({ isPremium: true, premiumPlan: planKey, premiumExpiration: new Date(Date.now()+30*24*60*60*1000).toISOString() }));
+                localStorage.setItem('ws_premium', JSON.stringify(true));
+
+                const userPremiumEl = document.getElementById('user-premium');
+                if (userPremiumEl) {
+                  userPremiumEl.textContent = 'Sim';
+                  userPremiumEl.classList.remove('premium-false');
+                  userPremiumEl.classList.add('premium-true');
+                }
+
+                if (premiumModal) premiumModal.classList.remove('open');
+                alert('Assinatura simulada com sucesso.');
+              } catch (err) {
+                console.error('Erro na simulação de ativação:', err);
+                alert('Não foi possível concluir a assinatura (simulada).');
+              }
+            }
+          });
+        });
+        console.log('Event listeners adicionados às opções de planos premium');
+      }
+    } catch (err) {
+      console.error('Erro ao registrar listeners de planos premium:', err);
+    }
   }, 500); // Aguarda 500ms para garantir que o DOM está pronto
 
   // ========= FOTO PERFIL =========
