@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gerenciar Plano Premium - WorkSwipe</title>
+    <title>Gerenciar Plano Premium - Sabiá</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/manage-premium.css">
     <link rel="icon" href="data:,">
 </head>
 <body>
     <a href="main.html" class="back-link">
-        ← Voltar ao WorkSwipe
+        ← Voltar ao Sabiá
     </a>
     
     <div class="manage-page">
         <div class="manage-header">
             <h1>Gerenciar Plano Premium</h1>
-            <p>Controle sua assinatura WorkSwipe Premium</p>
+            <p>Controle sua assinatura Sabiá Premium</p>
         </div>
 
         <div id="statusMessage" class="status-message" style="display: none;"></div>
@@ -106,7 +106,7 @@
 
         <!-- Benefícios Premium -->
         <div class="benefits-list" id="benefitsList">
-            <h3>Benefícios do WorkSwipe Premium</h3>
+            <h3>Benefícios do Sabiá Premium</h3>
             <div class="benefits-grid">
                 <div class="benefit-item">
                     <span class="benefit-icon">⚡</span>
@@ -258,7 +258,7 @@
             if (data.isPremium) {
                 // Usuário tem premium ativo
                 planInfo.className = 'plan-info';
-                planTitle.textContent = 'WorkSwipe Premium Ativo';
+                planTitle.textContent = 'Sabiá Premium Ativo';
                 planStatus.textContent = 'Seu plano premium está ativo e funcionando';
                 
                 planType.textContent = data.planId === 'monthly' ? 'Mensal' : 'Anual';

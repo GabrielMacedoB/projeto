@@ -1,5 +1,5 @@
 // mercadopago-config.js
-// Configuração e integração do MercadoPago para o WorkSwipe
+// Configuração e integração do MercadoPago para o Sabiá
 
 // Configuração do MercadoPago
 const MERCADOPAGO_CONFIG = {
@@ -117,7 +117,7 @@ class MercadoPagoPayments {
                 body: JSON.stringify({
                     planId: planId,
                     userEmail: currentUser.email || 'usuario@workswipe.com',
-                    userName: currentUser.name || 'Usuário WorkSwipe'
+                    userName: currentUser.name || 'Usuário Sabiá'
                 })
             });
 

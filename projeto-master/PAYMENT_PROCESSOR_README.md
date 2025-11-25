@@ -1,6 +1,6 @@
-# 💳 Processador de Pagamento WorkSwipe
+# 💳 Processador de Pagamento Sabiá
 
-Backend completo para processar pagamentos via MercadoPago no WorkSwipe.
+Backend completo para processar pagamentos via MercadoPago no Sabiá.
 
 ## 🚀 Funcionalidades
 
@@ -177,13 +177,13 @@ payment-server.js
 const PREMIUM_PLANS = {
   monthly: {
     id: 'premium_monthly',
-    title: 'WorkSwipe Premium Mensal',
+    title: 'Sabiá Premium Mensal',
     price: 19.90,
     description: 'Acesso premium por 1 mês'
   },
   yearly: {
     id: 'premium_yearly',
-    title: 'WorkSwipe Premium Anual',
+    title: 'Sabiá Premium Anual',
     price: 199.90,
     description: 'Acesso premium por 1 ano (2 meses grátis)'
   }
@@ -270,10 +270,10 @@ export PORT="3001"
 npm install -g pm2
 
 # Iniciar processo
-pm2 start payment-server.js --name "workswipe-payments"
+pm2 start payment-server.js --name "sabiá-payments"
 
 # Monitorar
-pm2 logs workswipe-payments
+pm2 logs sabiá-payments
 pm2 status
 ```
 
@@ -281,7 +281,7 @@ pm2 status
 ```nginx
 server {
     listen 443 ssl;
-    server_name api.workswipe.com;
+    server_name api.sabia.com;
     
     location /api/ {
         proxy_pass http://localhost:3001/api/;
@@ -323,7 +323,7 @@ A página `manage-premium.html` oferece uma interface completa para administrar 
 
 ### **Navegação:**
 - Acesso via botão "Gerenciar Plano" na página premium
-- Link de retorno para o WorkSwipe principal
+- Link de retorno para o Sabiá principal
 - Integração completa com o sistema de autenticação
 
 ---

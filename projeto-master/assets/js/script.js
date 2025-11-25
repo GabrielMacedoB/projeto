@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("✅ WorkSwipe iniciado com swipe ativo");
+  console.log("✅ Sabiá iniciado com swipe ativo");
 
   // ======== TEMA (dark/light) ========
   const root = document.documentElement;

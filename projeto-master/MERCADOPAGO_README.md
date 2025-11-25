@@ -1,6 +1,6 @@
-# 💳 Configuração do MercadoPago - WorkSwipe
+# 💳 Configuração do MercadoPago - Sabiá
 
-Este documento explica como configurar e usar a integração do MercadoPago no WorkSwipe.
+Este documento explica como configurar e usar a integração do MercadoPago no Sabiá.
 
 ## 📋 Pré-requisitos
 
@@ -43,7 +43,7 @@ const MERCADOPAGO_CONFIG = {
 
 ### 1. Acessar os Planos Premium
 
-No WorkSwipe, clique no botão **"Premium"** no topo da tela. Isso abrirá a página `premium.html` com os planos disponíveis.
+No Sabiá, clique no botão **"Premium"** no topo da tela. Isso abrirá a página `premium.html` com os planos disponíveis.
 
 ### 2. Escolher um Plano
 
@@ -215,4 +215,4 @@ Nome: APRO (aprovado) / OTHE (rejeitado)
 
 ---
 
-**🎉 Parabéns! O MercadoPago foi integrado com sucesso ao WorkSwipe!**
+**🎉 Parabéns! O MercadoPago foi integrado com sucesso ao Sabiá!**

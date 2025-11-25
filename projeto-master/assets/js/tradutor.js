@@ -4,7 +4,7 @@
 const dictionaries = {
   pt: {
     ui: {
-      title: 'WorkSwipe',
+      title: 'Sabiá',
       connect: 'Conecte-se',
       accountType: 'Tipo de conta:',
       candidate: 'Candidato',
@@ -60,7 +60,7 @@ const dictionaries = {
   },
   en: {
     ui: {
-      title: 'WorkSwipe',
+      title: 'Sabiá',
       connect: 'Sign in',
       accountType: 'Account type:',
       candidate: 'Candidate',

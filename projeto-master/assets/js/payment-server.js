@@ -32,13 +32,13 @@ const payments = new Map();
 const PREMIUM_PLANS = {
     monthly: {
         id: 'premium_monthly',
-        title: 'WorkSwipe Premium Mensal',
+        title: 'Sabiá Premium Mensal',
         price: 19.90,
         description: 'Acesso premium por 1 mês'
     },
     yearly: {
         id: 'premium_yearly',
-        title: 'WorkSwipe Premium Anual',
+        title: 'Sabiá Premium Anual',
         price: 199.90,
         description: 'Acesso premium por 1 ano (2 meses grátis)'
     }
@@ -72,7 +72,7 @@ app.post('/api/create-preference', async (req, res) => {
                 unit_price: plan.price
             }],
             payer: {
-                name: userName || 'Usuário WorkSwipe',
+                name: userName || 'Usuário Sabiá',
                 email: userEmail
             },
             back_urls: {

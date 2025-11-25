@@ -4,7 +4,7 @@ import { updateHeaderDOM, renderMatchesList, showConfirmModal, showToast as uiSh
 import { mercadoPagoPayments } from './mercadopago-config.js';
 
 /* app.js
- * WorkSwipe - protótipo de frontend
+ * Sabiá - protótipo de frontend
  * Comportamentos:
  * - Modo "Contratar" / "Procurar"
  * - Swipe com mouse/touch (arrastar cartão)
